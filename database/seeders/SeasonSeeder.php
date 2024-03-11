@@ -13,7 +13,12 @@ class SeasonSeeder extends Seeder
      */
     public function run(): void
     {
+        // Define how many seasons want to create
+        $numberOfSeasons = 5;
+
         // Seed data for seasons
-        Season::factory()->count(10)->create();
+        // Season::factory($numberOfSeasons)->create();
+
+        Season::factory()->count($numberOfSeasons)->create();
     }
 }

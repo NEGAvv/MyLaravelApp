@@ -26,7 +26,11 @@ class TVSeriesSeeder extends Seeder
             'description' => 'A high school chemistry teacher turned methamphetamine manufacturer.',
         ]);
 
-        TV_Series::factory(10)->create();
+        // Define how many episodes want to create
+        $numberOfSeries = 10;
 
+        // TV_Series::factory($numberOfSeries)->create();
+
+        TV_Series::factory()->count($numberOfSeries)->create();
     }
 }
