@@ -10,14 +10,13 @@ class Episode extends Model
     use HasFactory;
 
     protected $fillable = [
-        'seasons_id',
-        'rating',
+        'season_id',
         'title',
+        'rating',
     ];
 
-    // public function season()
-    // {
-    //     return $this->belongsTo(Season::class);
-    // }
-
+    public function seasons()
+    {
+        return $this->belongsTo(Season::class);
+    }
 }

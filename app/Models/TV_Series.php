@@ -15,10 +15,6 @@ class TV_Series extends Model
         'description',
     ];
 
-    // public function episodes()
-    // {
-    //     return $this->hasMany(Episode::class);
-    // }
 
     public function seasons()
     {
