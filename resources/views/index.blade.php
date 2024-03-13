@@ -12,9 +12,16 @@
         <!-- Loop through TV series data and display dynamically -->
         @foreach ($tvSeries as $series)
             <li>
-                <a href="{{ route('tv-series.episodes', ['id' => $series->id]) }}">
-                    {{ $series->title }}
-                </a>
+                <!-- Check if there are any seasons associated with the TV series -->
+                @if ($series->seasons->isNotEmpty())
+                    <!-- Provide the series_id and season_id parameters -->
+                    <a href="{{ route('tv-series.episodes', ['series_id' => $series->id, 'season_id' => $series->seasons->first()->id]) }}">
+                        {{ $series->title }}
+                    </a>
+                @else
+                    <!-- Handle case where there are no seasons associated with the TV series -->
+                    {{ $series->title }} (No Seasons Available)
+                @endif
             </li>
         @endforeach
     </ul>

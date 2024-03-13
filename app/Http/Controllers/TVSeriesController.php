@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TV_Series;
+use App\Models\Season;
+use App\Models\Episode;
 
 class TVSeriesController extends Controller
 {
@@ -13,11 +15,19 @@ class TVSeriesController extends Controller
         return view('index', ['tvSeries' => $tvSeries]);
     }
 
-    public function episodes($id)
+    public function showSeasons($id)
     {
         $tvSeries = TV_Series::findOrFail($id);
-        $episodes = $tvSeries->episodes()->paginate(10); // Assuming you want to paginate episodes
 
-        return view('episodes', compact('tvSeries', 'episodes'));
+        return view('seasons', ['tvSeries' => $tvSeries]);
     }
+
+    public function showEpisodes($series_id, $season_id)
+{
+    $season = Season::findOrFail($season_id);
+    $episodes = $season->episodes;
+
+    return view('tv_series_info', ['tvSeries' => $season->tvSeries, 'episodes' => $episodes]);
+}
+
 }

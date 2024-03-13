@@ -13,6 +13,9 @@ class TV_Series extends Model
         'title',
         'genre',
         'description',
+        'rating',
+        'release_year',
+        'creator'
     ];
 
 

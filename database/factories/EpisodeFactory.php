@@ -25,9 +25,12 @@ class EpisodeFactory extends Factory
      */
     public function definition()
     {
+        // Get a random season ID
+        $seasonId = Season::inRandomOrder()->first()->id;
+
         return [
-            'season_id' => Season::factory(), // Associate the episode with a season
-            'title' => $this->faker->sentence,
+            'season_id' => $seasonId,
+            'title' => $this->faker->realText(20),
             'rating' => $this->faker->randomFloat(1, 0, 10), // Generate a random rating between 0 and 10 with one decimal place
         ];
     }

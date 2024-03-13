@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('title');
             $table->string('genre');
             $table->text('description');
+            $table->float('rating', 3, 1);
+            $table->integer('release_year');
+            $table->string('creator');
             $table->timestamps();
         });
     }

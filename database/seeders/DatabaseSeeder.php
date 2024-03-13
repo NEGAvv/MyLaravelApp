@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call(TVSeriesSeeder::class);
-        $this->call(EpisodeSeeder::class);
         $this->call(SeasonSeeder::class);
+        $this->call(EpisodeSeeder::class);
     }
 }

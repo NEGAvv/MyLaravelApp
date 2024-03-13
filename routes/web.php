@@ -20,12 +20,21 @@ Route::get('/', function () {
 
 
 
-// Define the route for listing TV series with a closure function
+// Define the route for listing TV series
 Route::get('/tv-series', function () {
     return app(\App\Http\Controllers\TVSeriesController::class)->index();
 })->name('tv-series.index');
 
-// Define the route for displaying episodes of a TV series with a closure function
-Route::get('/tv-series/{id}/episodes', function ($id) {
-    return app(\App\Http\Controllers\TVSeriesController::class)->episodes($id);
+// Define the route for displaying seasons of a TV series 
+Route::get('/tv-series/{id}/seasons', function ($id) {
+    return app(\App\Http\Controllers\TVSeriesController::class)->showSeasons($id);
+})->name('tv-series.seasons');
+
+// Define the route for displaying episodes of a TV series 
+Route::get('/tv-series/{series_id}/seasons/{season_id}/episodes', function ($series_id, $season_id) {
+    return app(TVSeriesController::class)->showEpisodes($series_id, $season_id);
 })->name('tv-series.episodes');
+
+// Route::get('/tv-series/{series_id}/seasons/{season_id}/episodes', [TVSeriesController::class, 'showEpisodes'])->name('tv-series.episodes');
+
+

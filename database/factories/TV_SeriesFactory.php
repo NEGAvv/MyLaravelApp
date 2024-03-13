@@ -25,9 +25,12 @@ class TV_SeriesFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->sentence(3),
-            'genre' => $this->faker->word,
-            'description' => $this->faker->paragraph,
+            'title' => $this->faker->realText(50),
+            'genre' => $this->faker->randomElement(['Action', 'Comedy', 'Drama', 'Sci-Fi', 'Thriller']),
+            'description' => $this->faker->realText(),
+            'rating' => $this->faker->numberBetween(1, 10),
+            'release_year' => $this->faker->numberBetween(1980, 2022), 
+            'creator' => $this->faker->name, 
         ];
     }
 }
