@@ -16,7 +16,7 @@ class SeasonSeeder extends Seeder
      */
     public function run(): void
     {
-        // Define how many seasons you want to create for each TV series
+        // Define how many seasons want to create for each TV series
         $minSeasons = 1;
         $maxSeasons = 11;
 

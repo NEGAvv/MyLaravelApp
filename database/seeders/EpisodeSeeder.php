@@ -16,8 +16,8 @@ class EpisodeSeeder extends Seeder
     {
         // Seed data for episodes for each season
         Season::all()->each(function ($season) {
-            // Define how many episodes you want to create for each season
-            $numberOfEpisodes = rand(2, 20); // Random number between 2 and 20
+            // Define how many episodes want to create for each season
+            $numberOfEpisodes = rand(2, 20); 
 
             // Create episodes for the current season
             $season->episodes()->createMany(
