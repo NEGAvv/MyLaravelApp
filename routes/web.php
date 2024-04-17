@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TVSeriesController;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -9,32 +11,28 @@ use App\Http\Controllers\TVSeriesController;
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
 |
 */
 
 Route::get('/', function () {
-    return redirect()->route('tv-series.index');
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
 });
 
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-// Define the route for listing TV series
-Route::get('/tv-series', function () {
-    return app(\App\Http\Controllers\TVSeriesController::class)->index();
-})->name('tv-series.index');
-
-// Define the route for displaying seasons of a TV series 
-Route::get('/tv-series/{id}/seasons', function ($id) {
-    return app(\App\Http\Controllers\TVSeriesController::class)->showSeasons($id);
-})->name('tv-series.seasons');
-
-// Define the route for displaying episodes of a TV series 
-Route::get('/tv-series/{series_id}/seasons/{season_id}/episodes', function ($series_id, $season_id) {
-    return app(TVSeriesController::class)->showEpisodes($series_id, $season_id);
-})->name('tv-series.episodes');
-
-// Route::get('/tv-series/{series_id}/seasons/{season_id}/episodes', [TVSeriesController::class, 'showEpisodes'])->name('tv-series.episodes');
-
-
+require __DIR__.'/auth.php';

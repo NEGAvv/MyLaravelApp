@@ -8,26 +8,26 @@ use App\Models\Episode;
 
 class TVSeriesController extends Controller
 {
-    public function index()
-    {
-        $tvSeries = TV_Series::all();
+//     public function index()
+//     {
+//         $tvSeries = TV_Series::all();
 
-        return view('index', ['tvSeries' => $tvSeries]);
-    }
+//         return view('index', ['tvSeries' => $tvSeries]);
+//     }
 
-    public function showSeasons($id)
-    {
-        $tvSeries = TV_Series::findOrFail($id);
+//     public function showSeasons($id)
+//     {
+//         $tvSeries = TV_Series::findOrFail($id);
 
-        return view('seasons', ['tvSeries' => $tvSeries]);
-    }
+//         return view('seasons', ['tvSeries' => $tvSeries]);
+//     }
 
-    public function showEpisodes($series_id, $season_id)
-{
-    $season = Season::findOrFail($season_id);
-    $episodes = $season->episodes;
+//     public function showEpisodes($series_id, $season_id)
+// {
+//     $season = Season::findOrFail($season_id);
+//     $episodes = $season->episodes;
 
-    return view('tv_series_info', ['tvSeries' => $season->tvSeries, 'episodes' => $episodes]);
-}
+//     return view('tv_series_info', ['tvSeries' => $season->tvSeries, 'episodes' => $episodes]);
+// }
 
 }
