@@ -16,10 +16,10 @@ class CommentFactory extends Factory
         $users = User::all();
 
         $user = $users->random();
-
+        $series = Series::inRandomOrder()->first();
         return [
             'id_user' => $user->id,
-            'id_series' => Series::factory()->create()->id,
+            'id_series' => $series->id,
             'comment' => $this->faker->realText(200),
         ];
     }

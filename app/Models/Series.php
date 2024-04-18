@@ -10,6 +10,7 @@ class Series extends Model
     protected $fillable = [
         'id_user',
         'name', 
+        'description',
         'quantity_of_series',
         'rating', 
         'quantity_of_seasons'

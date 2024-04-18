@@ -13,6 +13,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->string('name');
+            $table->string('description', 500);
             $table->integer('quantity_of_series');
             $table->float('rating');
             $table->integer('quantity_of_seasons');

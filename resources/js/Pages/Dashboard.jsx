@@ -24,16 +24,16 @@ export default function Dashboard({ auth, series }) {
                                         </Link>
                                     ) : 'Unknown'}
                                         </div>
-                                    <div>Rating: {series.rating}</div>
-                                    <div>Number of Seasons: {series.quantity_of_seasons}</div>
+                                    <div>Replies <p className="text-sm circle">{series.comments_count}</p></div>
+                                    {/* <div>Number of Seasons: {series.quantity_of_seasons}</div> */}
                                 </div>
                                 <div className="text-right">
                                      {series.user ? (
-                                        <Link
-                                            href={route('user.show', {user: series.user.id})}
+                                        <><Link
+                                            href={route('user.show', { user: series.user.id })}
                                         >
                                             {`${series.user.name}`}
-                                        </Link>
+                                        </Link><p className="text-gray-600">DATE</p></>
                                     ) : 'Unknown'}
                                 </div>
                             </div>

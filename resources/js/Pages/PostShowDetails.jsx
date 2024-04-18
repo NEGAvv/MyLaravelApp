@@ -3,10 +3,6 @@ import { Head } from '@inertiajs/react';
 import { Link } from '@inertiajs/inertia-react';
 
 export default function PostShowDetails({ series, userComments, numComments, auth }) {
-    console.log(series);
-    console.log(userComments);
-    console.log(numComments);
-
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -15,19 +11,52 @@ export default function PostShowDetails({ series, userComments, numComments, aut
             <Head title="ForumVision" />
 
             <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <h3>Series Information:</h3>
-                    <p>Name: {series.name}</p>
-                    <p>Quantity of Series: {series.quantity_of_series}</p>
-                    <p>Rating: {series.rating}</p>
-
-                    <h3>Comments:</h3>
-                    <p>Total Comments: {numComments}</p>
+            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col sm:flex-row mb-6">
+        <div className="sm:w-1/2">
+            <img src="https://via.placeholder.com/400" alt="Placeholder Image" className="w-full h-auto" />
+        </div>
+        <div className="sm:w-1/2 p-4 sm:p-8">
+            <h1 className="text-2xl font-bold mb-2 text-black">{series.name}</h1>
+            <div className="flex flex-wrap mb-4">
+                {series.categories.map(category => (
+                    <span key={category.id} className="inline-block bg-gray-800 text-white rounded-full px-3 py-1 text-sm font-semibold mr-1 mb-1 hover:bg-gray-700 hover:text-gray-200 hover:border-gray-600 border border-gray-900 cursor-default">
+                        {category.name}
+                    </span>
+                ))}
+            </div>
+            <h2 className="text-gray-800 leading-relaxed">
+                Rating: {series.rating} | Episodes: {series.quantity_of_series} | Seasons: {series.quantity_of_seasons} 
+            </h2>
+            <p className="text-gray-800 leading-relaxed mb-4">
+                {series.description}
+            </p>
+            {series.actors.map(actor => (
+                <div className="flex items-center mb-4" key={actor.id}>
+                    <img src="https://via.placeholder.com/100" alt="Actor Image" className="w-16 h-16 rounded-full mr-4" />
+                    <div>
+                        <p className="text-gray-800 font-bold">{actor.name}</p>
+                        <p className="text-gray-600">Role: {actor.role}</p>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
+                    
                     <ul>
                         {userComments.map(comment => (
-                            <li key={comment.id}>
-                                <p>User: {comment.user.name}</p>
-                                <p>Comment: {comment.comment}</p>
+                            <li className="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4" key={comment.id}>
+                                <div className="p-6 py-2 text-gray-900">
+                                    {comment.user ? (
+                                        <div className="mb-1 flex items-center">
+                                            <Link href={route('user.show', {user: comment.user.id})}>
+                                                <h2 className='text-black mr-2'>{comment.user.name}</h2>
+                                            </Link>
+                                            <p className="text-gray-600">DATE</p>
+                                        </div>
+                                    ) : 'Unknown'}
+                                    <div>{comment.comment}</div>
+                                </div>
                             </li>
                         ))}
                     </ul>

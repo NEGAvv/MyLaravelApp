@@ -11,7 +11,8 @@ class UserController extends Controller
     {
         // Fetch the user's comments with series data
         $userSeries = $user->series()->get();
-        $userComments = $user->comments()->with('series')->get();
+        $userComments = Comment::where('id_user', $user->id)->with('series')->get();
+
 
         // Count the number of series and comments
         $numSeries = $userSeries->count();

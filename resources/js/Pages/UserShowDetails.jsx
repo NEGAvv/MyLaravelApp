@@ -25,7 +25,15 @@ export default function UserShowDetails({ user, userSeries, userComments, numSer
                             <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4" key={series.id}>
                                 <div className="p-6 py-2 text-gray-900 flex justify-between items-center">
                                     <div>
-                                        <div className="font-bold text-xl text-white-800 leading-tight">{series.name}</div>
+                                        <div className="font-bold text-xl text-white-800 leading-tight">{
+                                            series.name ? (
+                                                <Link
+                                                    href={route('series.show', {series: series.id})}
+                                                >
+                                                    {`${series.name}`}
+                                                </Link>
+                                            ) : 'Unknown'}
+                                        </div>
                                         <div>Rating: {series.rating}</div>
                                         <div>Number of Seasons: {series.quantity_of_seasons}</div>
                                     </div>

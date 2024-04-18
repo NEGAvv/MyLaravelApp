@@ -9,7 +9,8 @@ class SeriesController extends Controller
 {
     public function index()
     {
-        $series = Series::with('user')->get();
+        $series = Series::withCount('comments')->with('user')->get();
+
         return Inertia::render('Dashboard', ['series' => $series]);
     }
 
@@ -20,6 +21,10 @@ class SeriesController extends Controller
      
     // Count the number of comments for this series
     $numComments = $series->comments->count();
+
+    // Load the categories and actors relationships
+    $series->load('categories', 'actors');
+
 
     return inertia('PostShowDetails', [
         'series' => $series,
