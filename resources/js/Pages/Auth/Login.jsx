@@ -45,6 +45,7 @@ export default function Login({ status, canResetPassword }) {
                         autoComplete="username"
                         isFocused={true}
                         onChange={(e) => setData('email', e.target.value)}
+                        style={{ color: 'black' }}
                     />
 
                     <InputError message={errors.email} className="mt-2" />
@@ -61,6 +62,7 @@ export default function Login({ status, canResetPassword }) {
                         className="mt-1 block w-full"
                         autoComplete="current-password"
                         onChange={(e) => setData('password', e.target.value)}
+                        style={{ color: 'black' }}
                     />
 
                     <InputError message={errors.password} className="mt-2" />

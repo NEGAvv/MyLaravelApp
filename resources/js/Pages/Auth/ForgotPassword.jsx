@@ -35,6 +35,7 @@ export default function ForgotPassword({ status }) {
                     className="mt-1 block w-full"
                     isFocused={true}
                     onChange={(e) => setData('email', e.target.value)}
+                    style={{ color: 'black' }}
                 />
 
                 <InputError message={errors.email} className="mt-2" />

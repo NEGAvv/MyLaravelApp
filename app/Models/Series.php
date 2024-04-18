@@ -8,12 +8,17 @@ class Series extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'id_user',
         'name', 
         'quantity_of_series',
         'rating', 
         'quantity_of_seasons'
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user');
+    }
     public function actors()
     {
         return $this->belongsToMany(Actor::class, 'series_casts', 'id_series', 'id_actor');
@@ -26,6 +31,6 @@ class Series extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class, 'id_series');
     }
 }
