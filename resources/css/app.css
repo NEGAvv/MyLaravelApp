@@ -39,3 +39,18 @@ input {
     color: white; 
     font-size: 0.8em;
 }
+
+.pagination-button {
+    background-color: #111827;
+    color: #fff;
+    border: none;
+    padding: 0.25rem 0.6rem; 
+    border-radius: 0.25rem;
+    transition: background-color 0.3s ease;
+    font-size: 0.85rem; 
+}
+
+.pagination-button:hover {
+    background-color: #1f2a48;
+}
+

@@ -13,7 +13,9 @@ class Series extends Model
         'description',
         'quantity_of_series',
         'rating', 
-        'quantity_of_seasons'
+        'quantity_of_seasons',
+        'date_of_creation',
+        'img_url'
     ];
 
     public function user()

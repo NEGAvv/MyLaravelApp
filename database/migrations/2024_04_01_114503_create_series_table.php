@@ -17,6 +17,8 @@ return new class extends Migration
             $table->integer('quantity_of_series');
             $table->float('rating');
             $table->integer('quantity_of_seasons');
+            $table->date('date_of_creation');
+            $table->string('img_url');
             $table->timestamps();
         });
     }

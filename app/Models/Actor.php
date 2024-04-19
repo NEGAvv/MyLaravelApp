@@ -14,7 +14,8 @@ class Actor extends Model
         'biography',
         'birth_date', 
         'gender', 
-        'nationality'
+        'nationality',
+        'img_url'
     ];
 
     public function series()

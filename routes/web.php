@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActorController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -30,7 +31,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/user/{user}', [UserController::class, 'show'])->name('user.show');
-
 Route::get('/series/{series}', [SeriesController::class, 'show'])->name('series.show');
+Route::get('/actors/{actor}', [ActorController::class, 'show'])->name('actors.show');
 
 require __DIR__.'/auth.php';

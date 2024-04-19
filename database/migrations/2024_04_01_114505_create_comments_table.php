@@ -13,8 +13,9 @@ return new class extends Migration
             $table->unsignedBigInteger('id_user');
             $table->unsignedBigInteger('id_series');
             $table->text('comment');
+            $table->date('date_of_creation');
             $table->timestamps();
-
+            
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('id_series')->references('id')->on('series')->onDelete('cascade');
         });
