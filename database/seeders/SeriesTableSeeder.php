@@ -12,6 +12,6 @@ class SeriesTableSeeder extends Seeder
      */
     public function run(): void
     {
-        Series::factory()->count(20)->create();
+        Series::factory()->count(50)->create();
     }
 }

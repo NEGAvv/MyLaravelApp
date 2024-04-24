@@ -26,38 +26,40 @@ export default function UserShowDetails({ user, userSeries, userComments, numSer
                     <h3 className="font-semibold text-xl text-white-800 leading-tight mb-2">
                         | User's Posts <p className="text-sm circle">{numSeries}</p> |
                     </h3>
-                        {userSeries.map(series => (
-                            <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4" key={series.id}>
-                                <div className="p-6 py-2 text-gray-900 flex justify-between items-center">
-                                    <div>
-                                        <div className="font-bold text-xl text-white-800 leading-tight">{
-                                            series.name ? (
-                                                <Link
-                                                    href={route('series.show', {series: series.id})}
-                                                    className="text-blue-200 font-bold hover:underline"
-                                                >
-                                                   <p className="text-gray-800 font-bold">{`${series.name}`}</p>
-                                                </Link>
-                                            ) : 'Unknown'}
-                                        </div>
-                                        <div>Rating: {series.rating}</div>
-                                        <div>Number of Seasons: {series.quantity_of_seasons}</div>
+                    {userSeries.map(series => (
+                        <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4" key={series.id}>
+                            <div className="p-6 py-2 text-gray-900 sm:flex justify-between items-center">
+                                <div className="sm:w-4/5">
+                                    <div className="font-bold text-xl text-white-800 leading-tight">
+                                        {series.name ? (
+                                            <Link
+                                                href={route('series.show', {series: series.id})}
+                                                className="text-blue-200 font-bold hover:underline"
+                                            >
+                                                <p className="text-gray-800 font-bold">{`${series.name}`}</p>
+                                            </Link>
+                                        ) : 'Unknown'}
                                     </div>
-                                    <p className="text-gray-600 text-right">{formatDate(series.date_of_creation)}</p>
+                                    <div>Rating: {series.rating}</div>
+                                    <div>Number of Seasons: {series.quantity_of_seasons}</div>
+                                </div>
+                                <div className="text-gray-600 text-left sm:text-right sm:w-1/3">
+                                    {formatDate(series.date_of_creation)}
                                 </div>
                             </div>
-                        ))}
+                        </div>
+                    ))}
+
 
                     <h3 className="font-semibold text-xl text-white-800 leading-tight mb-2">
                         | User's Comments <p className="text-sm circle">{numComments}</p> |
                         </h3>
                         {userComments.map(comment => {
-                            return(
+                            return (
                                 <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4" key={comment.id}>
-                                    <div className="p-6 py-2 text-gray-900 flex justify-between items-center">
-                                        <div className='pr-2'>
+                                    <div className="p-6 py-2 text-gray-900 sm:flex justify-between items-center">
+                                        <div className="pr-2 sm:w-4/5">
                                             {comment.series && (
-                                                <>
                                                 <div className="font-bold text-xl text-white-800 leading-tight">
                                                     <Link
                                                         href={route('series.show', { series: comment.series.id })}
@@ -66,17 +68,17 @@ export default function UserShowDetails({ user, userSeries, userComments, numSer
                                                         <p className="text-gray-800 font-bold">{comment.series.name}</p>
                                                     </Link>
                                                 </div>
-                                                
-                                                </>
                                             )}
-                                                '{comment.comment}'
+                                            <div className="break-words">{comment.comment}</div>
                                         </div>
-                                            <div className="text-gray-600 text-right" style={{ whiteSpace: 'nowrap' }}>
-                                                {formatDate(comment.date_of_creation)}
-                                            </div>
+                                        <div className="text-gray-600 text-left sm:text-right sm:w-1/3">
+                                            {formatDate(comment.date_of_creation)}
+                                        </div>
                                     </div>
                                 </div>
-                        )})}
+                            );
+                        })}
+
                 </div>
             </div>
         </AuthenticatedLayout>

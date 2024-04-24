@@ -12,6 +12,6 @@ class SeriesCastTableSeeder extends Seeder
      */
     public function run()
     {
-        SeriesCast::factory()->count(50)->create();
+        SeriesCast::factory()->count(100)->create();
     }
 }

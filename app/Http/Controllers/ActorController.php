@@ -3,9 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Actor;
 use Illuminate\Http\Request;
-use App\Models\User;
-use App\Models\Series;
-use App\Models\Comment;
+
 
 class ActorController extends Controller
 {
