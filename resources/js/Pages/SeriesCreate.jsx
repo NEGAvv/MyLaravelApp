@@ -33,7 +33,7 @@ export default function SeriesCreate({ auth }) {
             user={auth.user}
             header={<h2 className="font-semibold text-xl text-white-800 leading-tight">Create Series</h2>}
         >
-          <Head title="Series Details" />
+          <Head title="Create Series" />
           <div className="py-4">
             <div className="max-w-3xl mx-auto sm:px-6 lg:px-8">
               <form onSubmit={handleSubmit}>

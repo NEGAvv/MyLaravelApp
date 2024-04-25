@@ -1,7 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { Link } from '@inertiajs/inertia-react';
-import { useState } from 'react';
+import {  useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
 
@@ -152,6 +152,7 @@ export default function SeriesShowDetails({ series, imageUrl: seriesImg,actorIma
                                     </span>
                                 ))}
                             </div>
+
                             <h2 className="text-gray-800 leading-relaxed">
                                 Rating: {series.rating} | Episodes: {series.quantity_of_series} | Seasons: {series.quantity_of_seasons} 
                             </h2>

@@ -1,8 +1,9 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from '@inertiajs/react';
 import { Inertia } from '@inertiajs/inertia';
+import Select from 'react-select';
 
-export default function SeriesEdit({ series, auth }) {
+export default function SeriesEdit({ series, allCategories, seriesCategories, allActors,seriesActors, auth }) {
     const { data, setData, post } = useForm({
         name: series.name,
         description: series.description,
@@ -11,12 +12,27 @@ export default function SeriesEdit({ series, auth }) {
         quantity_of_seasons: series.quantity_of_seasons,
         date_of_creation: series.date_of_creation,
         img_url: series.img_url,
+        categories: seriesCategories.map(category => category.id),
+        actors: seriesActors.map(actor => ({ value: actor.id, label: actor.name}))
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log(data);
         Inertia.put(route('series.update', { series: series.id }), data);
     };
+
+    const handleActorsChange = (selectedActors) => {
+        // Extract full actor objects of selected actors
+        const selectedActorValues = selectedActors.map(actor => ({
+            value: actor.value,
+            label: actor.label
+        }));
+        setData('actors', selectedActorValues);
+    };
+    
+    
+    
     
 
     return (
@@ -27,15 +43,15 @@ export default function SeriesEdit({ series, auth }) {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col sm:flex-row mb-6">
                         <div className="sm:w-1/2">
-                        {data.img_url.startsWith("images/posters/") ? (
-                        <img
-                            src={`http://127.0.0.1:8000/${data.img_url}`}
-                            alt="Series Image"
-                            className="w-full h-auto"
-                        />
-                        ) : (
-                        <img src={data.img_url} alt="Series Image" className="w-full h-auto" />
-                        )}
+                            {data.img_url.startsWith("images/posters/") ? (
+                            <img
+                                src={`http://127.0.0.1:8000/${data.img_url}`}
+                                alt="Series Image"
+                                className="w-full h-auto"
+                            />
+                            ) : (
+                            <img src={data.img_url} alt="Series Image" className="w-full h-auto" />
+                            )}
 
                         </div>
                         <div className="sm:w-1/2 p-4 sm:p-8">
@@ -67,6 +83,7 @@ export default function SeriesEdit({ series, auth }) {
                                     <input
                                         id="quantity_of_series"
                                         type="number"
+                                        min="1"
                                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         value={data.quantity_of_series}
                                         onChange={(e) => setData('quantity_of_series', e.target.value)}
@@ -92,6 +109,7 @@ export default function SeriesEdit({ series, auth }) {
                                     <input
                                         id="quantity_of_seasons"
                                         type="number"
+                                        min="1"
                                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         value={data.quantity_of_seasons}
                                         onChange={(e) => setData('quantity_of_seasons', e.target.value)}
@@ -121,6 +139,48 @@ export default function SeriesEdit({ series, auth }) {
                                         required
                                     />
                                 </div>
+
+                                <div className="mb-4">
+                                    <label htmlFor="categories" className="block text-gray-700 font-bold mb-2">Categories</label>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
+                                        {allCategories.map(category => (
+                                            <div key={category.id} className="flex items-center">
+                                                <input
+                                                    id={`category_${category.id}`}
+                                                    type="checkbox"
+                                                    className="mr-2 h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                                                    value={category.id}
+                                                    checked={data.categories.includes(category.id)}
+                                                    onChange={(e) => {
+                                                        const categoryId = parseInt(e.target.value);
+                                                        const updatedCategories = e.target.checked
+                                                            ? [...data.categories, categoryId]
+                                                            : data.categories.filter(id => id !== categoryId);
+                                                        setData('categories', updatedCategories);
+                                                    }}
+                                                />
+                                                <label htmlFor={`category_${category.id}`} className="select-none">{category.name}</label>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="mb-4">
+                                    <label htmlFor="actors" className="block text-gray-700 font-bold mb-2">Actors</label>
+                                    <Select
+                                        id="actors"
+                                        options={allActors.map(actor => ({ value: actor.id, label: actor.name }))}
+                                        isMulti
+                                        value={(() => {
+                                            console.log(data.actors);
+                                            return data.actors;
+                                        })()}
+                                        onChange={handleActorsChange}
+                                        className="basic-multi-select"
+                                        classNamePrefix="select"
+                                    />
+                                </div>
+
                                 <button
                                     type="submit"
                                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

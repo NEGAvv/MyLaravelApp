@@ -9,6 +9,6 @@ class SeriesCast extends Model
     use HasFactory;
     protected $fillable = [
         'id_series', 
-        'id_actor'
+        'id_actor',
     ];
 }

@@ -24,7 +24,6 @@ export default function ActorShowDetails({ actor,actorImg, auth }) {
                     </div>
                         <div className="sm:w-2/3 md:w-3/4 p-4 sm:p-8">
                             <h1 className="text-2xl font-bold mb-2 text-black">{actor.name}</h1>
-                            <p className="text-gray-800 mb-4">Role: {actor.role}</p>
                             <div className="mb-4 flex flex-wrap">
                                 <p className="text-gray-800 mr-4 mb-2 sm:mb-0"><strong>Birth Date:</strong> {formatDate(actor.birth_date)}</p>
                                 <p className="text-gray-800 mr-4 mb-2 sm:mb-0"><strong>Gender:</strong> {actor.gender}</p>
@@ -52,6 +51,8 @@ export default function ActorShowDetails({ actor,actorImg, auth }) {
                                             ) : 'Unknown'}
                                         </div>
                                         <div className="text-sm text-gray-600">
+                                            {/* Make different roles for an actor */}
+                                            <p>Role: {actor.role}</p>
                                             Rating: {series.rating} | Seasons: {series.quantity_of_seasons} | Episodes: {series.quantity_of_series}
                                         </div>
                                     </div>
