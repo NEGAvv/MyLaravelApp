@@ -12,9 +12,10 @@ class SeriesController extends Controller
 {
     public function index(Request $request)
     {
+        $series = Series::withCount('comments')->with('user')->get();
+
         // Define the maximum number of items per page
         $perPage = 10;
-
         $totalSeriesCount = Series::count();
 
         // Calculate the maximum number of pages based on the total number of series and items per page
@@ -33,6 +34,7 @@ class SeriesController extends Controller
 
         return Inertia::render('Dashboard', [
             'seriesPaginated' => $seriesPaginated,
+            'series' => $series,
         ]);
     }
 
@@ -46,7 +48,6 @@ class SeriesController extends Controller
         //Fetch data 
         $userComments = $series->comments()->with('user')->get();
         $seriesImg = asset($series->img_url);
-        $allCategories = Category::all();
         // Fetch actor images
         $actorImages = [];
         foreach ($series->actors as $actor) {

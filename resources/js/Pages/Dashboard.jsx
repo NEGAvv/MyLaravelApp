@@ -26,8 +26,8 @@ export default function Dashboard({ auth, series, seriesPaginated }) {
     const handleSearch = (query) => {
         setSearchQuery(query);
         if (query.trim() !== '') {
-            // Filter series data when search query is not empty
-            const filteredData = series.data.filter((seriesItem) =>
+            // Filter all series data when search query is not empty
+            const filteredData = series.filter((seriesItem) =>
                 seriesItem.name.toLowerCase().includes(query.toLowerCase()) ||
                 (seriesItem.user && seriesItem.user.name.toLowerCase().includes(query.toLowerCase()))
             );
