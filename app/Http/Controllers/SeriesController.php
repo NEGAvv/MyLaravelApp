@@ -143,7 +143,7 @@ class SeriesController extends Controller
             'rating' => 'required|numeric',
             'quantity_of_seasons' => 'required|integer',
             'date_of_creation' => 'required|date',
-            'img_url' => 'required|url',
+            'img_url' => 'required|string',
             'categories' => 'nullable|array', 
             'actors' => 'nullable|array',
         ]);

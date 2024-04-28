@@ -3,7 +3,7 @@ import { Head } from '@inertiajs/react';
 import { Link } from '@inertiajs/inertia-react';
 import {  useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
-import { FiEdit, FiTrash2 } from 'react-icons/fi';
+import { FiEdit, FiTrash2, FiPlusCircle } from 'react-icons/fi';
 
 export default function SeriesShowDetails({ series, imageUrl: seriesImg,actorImages, userComments, auth }) {
     // Function to format date as "Month Day, Year"
@@ -145,6 +145,7 @@ export default function SeriesShowDetails({ series, imageUrl: seriesImg,actorIma
                                      )}
                             </div>
 
+                            {/* Categories */}
                             <div className="flex flex-wrap mb-4">
                                 {series.categories.map(category => (
                                     <span key={category.id} className="inline-block bg-gray-800 text-white rounded-full px-3 py-1 text-sm font-semibold mr-1 mb-1 hover:bg-gray-700 hover:text-gray-200 hover:border-gray-600 border border-gray-900 cursor-default">
@@ -153,12 +154,15 @@ export default function SeriesShowDetails({ series, imageUrl: seriesImg,actorIma
                                 ))}
                             </div>
 
+                            {/* Series info */}
                             <h2 className="text-gray-800 leading-relaxed">
                                 Rating: {series.rating} | Episodes: {series.quantity_of_series} | Seasons: {series.quantity_of_seasons} 
                             </h2>
                             <p className="text-gray-800 leading-relaxed mb-4">
                                 {series.description}
                             </p>
+
+                            {/* Actors */}
                             {series.actors.map((actor, index) => (
                                 <div className="flex items-center mb-4" key={actor.id}>
                                     <img 
@@ -177,8 +181,26 @@ export default function SeriesShowDetails({ series, imageUrl: seriesImg,actorIma
                                     </div>
                                 </div>
                             ))}
+
+                            {/* Create actor */}
+                            {isAllowed(auth.user, series.id_user) && (
+                                <div className="flex items-center mb-4 ml-4">
+                                    <Link 
+                                        href={route('actors.createForm')}
+                                        className="text-blue-200 font-bold hover:underline transition-transform transform hover:scale-110"
+                                    >
+                                        <div className='text-gray-800 font-bold flex flex-row flex items-center'>
+                                                <FiPlusCircle className="mr-1 w-6 h-6" />
+                                                Create Actor
+                                            
+                                        </div>
+                                    </Link>
+                                </div>
+                            )}
                         </div>
                     </div>
+
+                    {/* Add comment */}
                     <div className="flex justify-center">
                         <form onSubmit={(event) => handleSubmit(event, series.id)} className="flex mb-2 w-full">
                             <textarea
@@ -194,6 +216,7 @@ export default function SeriesShowDetails({ series, imageUrl: seriesImg,actorIma
                         </form>
                     </div>
 
+                    {/* Comments section */}
                     <ul>
                         {userComments.map(comment => (
                             <li className="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4" key={comment.id}>

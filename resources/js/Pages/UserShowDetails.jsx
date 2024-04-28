@@ -3,11 +3,6 @@ import { Head } from '@inertiajs/react';
 import { Link } from '@inertiajs/inertia-react';
 
 export default function UserShowDetails({ user, userSeries, userComments, numSeries, numComments, auth }) {
-    // logging data for debugging 
-    console.log(user);
-    console.log(userSeries);
-    console.log(userComments);
-
     // Function to format date as "Month Day, Year"
     const formatDate = (dateString) => {
         const options = { month: 'long', day: 'numeric', year: 'numeric' };

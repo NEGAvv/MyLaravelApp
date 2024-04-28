@@ -155,10 +155,24 @@ export default function Dashboard({ auth, series, seriesPaginated }) {
                                         <div>Replies <p className="text-sm circle">{seriesItem.comments_count}</p></div>
                                     </div>
 
-                                    <div className="text-right flex items-center max-w-xl sm:max-w-xs">
-                                        {/* Icons */}
-                                        {isAllowed(seriesItem) && (
-                                            <div className="mr-4 flex flex-col">
+                                    <div className="sm:text-right flex items-center max-w-xl sm:max-w-xs">
+                                        {/* User details */}
+                                        {seriesItem.user ? (
+                                            <div className="flex flex-col">
+                                                <Link
+                                                    href={route('user.show', { user: seriesItem.user.id })}
+                                                    className="text-blue-200 font-bold hover:underline mb-1"
+                                                >
+                                                    <p className="text-gray-800 font-bold">{seriesItem.user.name}</p>
+                                                </Link>
+                                                <p className="text-gray-600">{formatDate(seriesItem.date_of_creation)}</p>
+                                            </div>
+                                        ) : (
+                                            <p className="text-gray-600">Unknown</p>
+                                        )}
+                                         {/* Icons */}
+                                         {isAllowed(seriesItem) && (
+                                            <div className="ml-4 flex flex-col">
                                                 {/* Delete button with confirmation */}
                                                 {confirmDeleteMap[seriesItem.id] ? (
                                                     <div>
@@ -192,21 +206,6 @@ export default function Dashboard({ auth, series, seriesPaginated }) {
                                                     </>
                                                 )}
                                             </div>
-                                        )}
-
-                                        {/* User details */}
-                                        {seriesItem.user ? (
-                                            <div className="flex flex-col">
-                                                <Link
-                                                    href={route('user.show', { user: seriesItem.user.id })}
-                                                    className="text-blue-200 font-bold hover:underline mb-1"
-                                                >
-                                                    <p className="text-gray-800 font-bold">{seriesItem.user.name}</p>
-                                                </Link>
-                                                <p className="text-gray-600">{formatDate(seriesItem.date_of_creation)}</p>
-                                            </div>
-                                        ) : (
-                                            <p className="text-gray-600">Unknown</p>
                                         )}
                                     </div>
                                 </div>

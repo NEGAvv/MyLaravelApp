@@ -31,10 +31,6 @@ export default function SeriesEdit({ series, allCategories, seriesCategories, al
         setData('actors', selectedActorValues);
     };
     
-    
-    
-    
-
     return (
         <AuthenticatedLayout user={auth.user} header={<h2 className="font-semibold text-xl text-white-800 leading-tight break-words">{series.name}</h2>}>
             <Head title="Edit Series" />
@@ -52,7 +48,6 @@ export default function SeriesEdit({ series, allCategories, seriesCategories, al
                             ) : (
                             <img src={data.img_url} alt="Series Image" className="w-full h-auto" />
                             )}
-
                         </div>
                         <div className="sm:w-1/2 p-4 sm:p-8">
                             <h1 className="text-2xl font-bold mb-2 text-black  break-words">{series.name}</h1>
@@ -186,6 +181,13 @@ export default function SeriesEdit({ series, allCategories, seriesCategories, al
                                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                 >
                                     Save Changes
+                                </button>
+                                <button
+                                    type="button"
+                                    className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2"
+                                    onClick={() => window.history.back()}
+                                    >
+                                        Cancel
                                 </button>
                             </form>
                         </div>

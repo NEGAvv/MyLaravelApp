@@ -66,6 +66,13 @@ export default function SeriesCreate({ auth }) {
                   <input type="url" id="img_url" name="img_url" value={formData.img_url} onChange={handleChange} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                 </div>
                 <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md">Create Series</button>
+                <button
+                  type="button"
+                  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2"
+                  onClick={() => window.history.back()}
+                  >
+                      Cancel
+                </button>
               </form>
             </div>
         </div>

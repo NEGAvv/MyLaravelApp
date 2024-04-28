@@ -30,9 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/series/create-form', [SeriesController::class, 'createForm'])
-    ->name('series.createForm');
-
+Route::get('/series/create-form', [SeriesController::class, 'createForm'])->name('series.createForm');
 Route::post('/series', [SeriesController::class, 'store'])->name('series.store');
 Route::get('/series/{series}/edit', [SeriesController::class, 'edit'])->name('series.edit');
 Route::put('/series/{series}', [SeriesController::class, 'update'])->name('series.update');
@@ -40,7 +38,14 @@ Route::delete('/series/{series}', [SeriesController::class, 'destroy'])->name('s
 Route::get('/series/{series}', [SeriesController::class, 'show'])->name('series.show');
 
 Route::get('/user/{user}', [UserController::class, 'show'])->name('user.show');
+
+Route::get('/actors/create-form', [ActorController::class, 'createForm'])->name('actors.createForm');
+Route::post('/actors', [ActorController::class, 'store'])->name('actors.store');
+Route::get('/actors/{actor}/edit', [ActorController::class, 'edit'])->name('actors.edit');
+Route::put('/actors/{actor}', [ActorController::class, 'update'])->name('actors.update');
+Route::delete('/actors/{actor}', [ActorController::class, 'destroy'])->name('actors.destroy');
 Route::get('/actors/{actor}', [ActorController::class, 'show'])->name('actors.show');
+
 
 Route::post('/series/{seriesId}/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
