@@ -10,10 +10,10 @@ return new class extends Migration
     {
         Schema::create('actors', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable(false)->index();
             $table->string('role');
             $table->string('biography');
-            $table->date('birth_date');
+            $table->date('birth_date')->between('1900-01-01', now());
             $table->string('gender');
             $table->string('nationality');
             $table->string('img_url');

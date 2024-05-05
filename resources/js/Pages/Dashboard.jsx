@@ -3,12 +3,15 @@ import { Link, Head } from '@inertiajs/react';
 import { useState } from 'react';
 import { FiEdit, FiTrash2 } from 'react-icons/fi'; 
 import { Inertia } from '@inertiajs/inertia';
+import SortButton from '@/Components/SortButton';
+import axios from 'axios';
 
-export default function Dashboard({ auth, series, seriesPaginated }) {
+export default function Dashboard({ auth,  seriesPaginated, sortedSeries }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredSeries, setFilteredSeries] = useState([]);
     const [confirmDeleteMap, setConfirmDeleteMap] = useState({});
-    
+    const [sortOrder, setSortOrder] = useState(null);
+
     // Function to format date as "Month Day, Year"
     const formatDate = (dateString) => {
         const options = { month: 'long', day: 'numeric', year: 'numeric' };
@@ -22,12 +25,31 @@ export default function Dashboard({ auth, series, seriesPaginated }) {
             (auth.user.isAdmin) // Check if the current user is an admin
         );
     };
-    
+
+    const handleSortButtonClick = (newSortOrder) => {
+        // Update the sort order state
+        setSortOrder(newSortOrder);
+        console.log('New Sort Order:', newSortOrder);
+        
+        // Make an AJAX request to fetch sorted series data based on the new sort order
+        axios.get('/dashboard', { params: { sort_order: newSortOrder } })
+            .then(response => {
+                // Log the response for debugging
+            console.log('Sorted Series Response:', response);
+            // Update the component state with the new sorted series data
+            const seriesData = response.data; // Assuming the sorted data is returned in the response
+            })
+            .catch(error => {
+                // Log any errors for debugging
+                console.error('Error fetching sorted series:', error);
+            });
+    };
+
     const handleSearch = (query) => {
         setSearchQuery(query);
         if (query.trim() !== '') {
             // Filter all series data when search query is not empty
-            const filteredData = series.filter((seriesItem) =>
+            const filteredData = sortedSeries.filter((seriesItem) =>
                 seriesItem.name.toLowerCase().includes(query.toLowerCase()) ||
                 (seriesItem.user && seriesItem.user.name.toLowerCase().includes(query.toLowerCase()))
             );
@@ -39,6 +61,13 @@ export default function Dashboard({ auth, series, seriesPaginated }) {
     };
 
     const seriesData = searchQuery ? filteredSeries : seriesPaginated.data;
+
+    const sortedSeriesData = [...seriesData]; // Create a copy of seriesData to avoid mutating state
+    if (sortOrder === 'asc') {
+        sortedSeriesData.sort((a, b) => new Date(a.date_of_creation) - new Date(b.date_of_creation));
+    } else if (sortOrder === 'desc') {
+        sortedSeriesData.sort((a, b) => new Date(b.date_of_creation) - new Date(a.date_of_creation));
+    }
 
     // Function to handle series deletion
     const handleDelete = (seriesId, e) => {
@@ -74,7 +103,8 @@ export default function Dashboard({ auth, series, seriesPaginated }) {
             header={
                 <div className="flex justify-between items-center">
                     <h2 className="font-semibold text-xl text-white-800 leading-tight">See the latest posts</h2>
-                    <div className="max-w-xs">
+                    <div className="max-w-xs flex flex-row">
+                        <SortButton onClick={handleSortButtonClick} />
                         <input 
                             type="text" 
                             placeholder="Search series or user..." 
@@ -135,7 +165,7 @@ export default function Dashboard({ auth, series, seriesPaginated }) {
                         </div>
                     </div>
 
-                    {seriesData.map(seriesItem => (
+                    {sortedSeriesData.map(seriesItem => (
                         <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4" key={seriesItem.id}>
                             <div className="p-6 py-2 text-gray-900">
                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">

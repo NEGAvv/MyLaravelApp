@@ -8,11 +8,12 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\DB;
 class SeriesController extends Controller
 {
     public function index(Request $request)
     {
-        $series = Series::withCount('comments')->with('user')->get();
+        // $series = Series::withCount('comments')->with('user')->get();
 
         // Define the maximum number of items per page
         $perPage = 10;
@@ -32,9 +33,24 @@ class SeriesController extends Controller
         // Retrieve the paginated series data for the requested page
         $seriesPaginated = Series::withCount('comments')->with('user')->paginate($perPage, ['*'], 'page', $requestedPage);
 
+        // Get the sort order from the request or default to null
+        $sortOrder = $request->query('sort_order', null);
+
+        // Call the appropriate stored procedure based on the sort order
+        if ($sortOrder === 'asc') {
+            $sortedSeries = DB::select("SELECT * FROM SelectDataAsc()");
+        } elseif ($sortOrder === 'desc') {
+            $sortedSeries = DB::select("SELECT * FROM SelectDataDesc()");
+        } else {
+            // Default behavior when sort order is not provided or invalid
+            $sortedSeries = Series::withCount('comments')->with('user')->get();;
+        }
+
+
         return Inertia::render('Dashboard', [
             'seriesPaginated' => $seriesPaginated,
-            'series' => $series,
+            // 'series' => $series,
+            'sortedSeries' => $sortedSeries,
         ]);
     }
 
@@ -150,7 +166,6 @@ class SeriesController extends Controller
     
         // Update the series with the validated data
         $series->update($validatedData);
-        
         
         // Update categories associated with the series
         if (isset($validatedData['categories'])) {
