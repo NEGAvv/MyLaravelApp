@@ -6,17 +6,18 @@ import { Inertia } from '@inertiajs/inertia';
 import { FiEdit, FiTrash2, FiPlusCircle } from 'react-icons/fi';
 
 export default function SeriesShowDetails({ series, imageUrl: seriesImg,actorImages, userComments, auth }) {
-    // Function to format date as "Month Day, Year"
-    const formatDate = (dateString) => {
-        const options = { month: 'long', day: 'numeric', year: 'numeric' };
-        return new Date(dateString).toLocaleDateString('en-US', options);
-    };
-
-    // State variables to manage edit mode and edited comment
+    // State variables to manage comment
     const [comment, setComment] = useState('');
     const [editMode, setEditMode] = useState(null); // Store the ID of the comment being edited
     const [editedComment, setEditedComment] = useState('');
     const [confirmDeleteMap, setConfirmDeleteMap] = useState({});
+    const [commentError, setCommentError] = useState('');
+
+      // Function to format date as "Month Day, Year"
+      const formatDate = (dateString) => {
+        const options = { month: 'long', day: 'numeric', year: 'numeric' };
+        return new Date(dateString).toLocaleDateString('en-US', options);
+    };
 
     const handleChange = (event) => {
         setComment(event.target.value);
@@ -24,12 +25,13 @@ export default function SeriesShowDetails({ series, imageUrl: seriesImg,actorIma
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        
+
         // Ensure comment is not empty
         if (!comment.trim()) {
+            setCommentError('Comment cannot be empty.');
             return;
         }
-    
+
         // Handle comment submission
         Inertia.post(route('comments.store', { seriesId: series.id }), {
             series_id: series.id,
@@ -37,8 +39,10 @@ export default function SeriesShowDetails({ series, imageUrl: seriesImg,actorIma
         }).then(() => {
             // Reset the comment input after successful submission
             setComment('');
+            setCommentError('');
         }).catch(error => {
             console.error('Error submitting comment:', error);
+            setCommentError('Error submitting comment. Please try again.');
         });
     };
 
@@ -199,9 +203,11 @@ export default function SeriesShowDetails({ series, imageUrl: seriesImg,actorIma
                             )}
                         </div>
                     </div>
-
+                    
+                    {commentError && <p className="text-red-500">{commentError}</p>}
                     {/* Add comment */}
                     <div className="flex justify-center">
+                        
                         <form onSubmit={(event) => handleSubmit(event, series.id)} className="flex mb-2 w-full">
                             <textarea
                                 value={comment}

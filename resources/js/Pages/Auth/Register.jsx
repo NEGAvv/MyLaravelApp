@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
@@ -14,6 +14,12 @@ export default function Register() {
         password_confirmation: '',
     });
 
+    // State for error handling
+    const [nameError, setNameError] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [passwordConfirmationError, setPasswordConfirmationError] = useState('');
+
     useEffect(() => {
         return () => {
             reset('password', 'password_confirmation');
@@ -23,7 +29,34 @@ export default function Register() {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('register'));
+        // Reset previous errors
+        setNameError('');
+        setEmailError('');
+        setPasswordError('');
+        setPasswordConfirmationError('');
+
+        // Validate form fields
+        let isValid = true;
+        if (!data.name.trim()) {
+            setNameError('Name cannot be empty.');
+            isValid = false;
+        }
+        if (!data.email.trim() || !/\S+@\S+\.\S+/.test(data.email.trim())) {
+            setEmailError('Invalid email format.');
+            isValid = false;
+        }
+        if (!data.password.trim()) {
+            setPasswordError('Password cannot be empty.');
+            isValid = false;
+        }
+        if (data.password !== data.password_confirmation) {
+            setPasswordConfirmationError('Passwords do not match.');
+            isValid = false;
+        }
+
+        if (isValid) {
+            post(route('register'));
+        }
     };
 
     return (
@@ -46,7 +79,7 @@ export default function Register() {
                         style={{ color: 'black' }}
                     />
 
-                    <InputError message={errors.name} className="mt-2" />
+                    <InputError message={nameError || errors.name} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
@@ -64,7 +97,7 @@ export default function Register() {
                         style={{ color: 'black' }}
                     />
 
-                    <InputError message={errors.email} className="mt-2" />
+                    <InputError message={emailError || errors.email} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
@@ -82,7 +115,7 @@ export default function Register() {
                         style={{ color: 'black' }}
                     />
 
-                    <InputError message={errors.password} className="mt-2" />
+                    <InputError message={passwordError || errors.password} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
@@ -100,7 +133,7 @@ export default function Register() {
                         style={{ color: 'black' }}
                     />
 
-                    <InputError message={errors.password_confirmation} className="mt-2" />
+                    <InputError message={passwordConfirmationError || errors.password_confirmation} className="mt-2" />
                 </div>
 
                 <div className="flex items-center justify-end mt-4">

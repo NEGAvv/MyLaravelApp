@@ -1,10 +1,18 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm } from '@inertiajs/react';
-import { Inertia } from '@inertiajs/inertia';
-import Select from 'react-select';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head, useForm } from "@inertiajs/react";
+import { Inertia } from "@inertiajs/inertia";
+import Select from "react-select";
+import InputError from "@/Components/InputError";
 
-export default function SeriesEdit({ series, allCategories, seriesCategories, allActors,seriesActors, auth }) {
-    const { data, setData, post } = useForm({
+export default function SeriesEdit({
+    series,
+    allCategories,
+    seriesCategories,
+    allActors,
+    seriesActors,
+    auth,
+}) {
+    const { data, setData, post, errors } = useForm({
         name: series.name,
         description: series.description,
         quantity_of_series: series.quantity_of_series,
@@ -12,27 +20,89 @@ export default function SeriesEdit({ series, allCategories, seriesCategories, al
         quantity_of_seasons: series.quantity_of_seasons,
         date_of_creation: series.date_of_creation,
         img_url: series.img_url,
-        categories: seriesCategories.map(category => category.id),
-        actors: seriesActors.map(actor => ({ value: actor.id, label: actor.name}))
+        categories: seriesCategories.map((category) => category.id),
+        actors: seriesActors.map((actor) => ({
+            value: actor.id,
+            label: actor.name,
+        })),
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(data);
-        Inertia.put(route('series.update', { series: series.id }), data);
+        // Perform validation
+        if (validateFormData()) {
+            // If validation succeeds, submit the form
+            Inertia.put(route("series.update", { series: series.id }), data);
+        }
+    };
+
+    const validateFormData = () => {
+        let isValid = true;
+        // Validation for name
+        if (!data.name.trim()) {
+            isValid = false;
+            errors.name = "Name cannot be empty.";
+        }
+        // Validation for description
+        if (!data.description.trim()) {
+            isValid = false;
+            errors.description = "Description cannot be empty.";
+        }
+        // Validation for quantity of series
+        if (
+            !data.quantity_of_series.toString().trim() ||
+            isNaN(data.quantity_of_series) ||
+            parseInt(data.quantity_of_series) <= 0
+        ) {
+            isValid = false;
+            errors.quantity_of_series =
+                "Quantity of series must be a positive number.";
+        }
+        // Validation for rating
+        if (
+            !data.rating.toString().trim() ||
+            isNaN(data.rating) ||
+            parseFloat(data.rating) <= 0
+        ) {
+            isValid = false;
+            errors.rating = "Rating must be a positive number.";
+        }
+        // Validation for quantity of seasons
+        if (
+            !data.quantity_of_seasons.toString().trim() ||
+            isNaN(data.quantity_of_seasons) ||
+            parseInt(data.quantity_of_seasons) <= 0
+        ) {
+            isValid = false;
+            errors.quantity_of_seasons =
+                "Quantity of seasons must be a positive number.";
+        }
+        // Validation for image URL
+        if (!data.img_url.trim()) {
+            isValid = false;
+            errors.img_url = "Image URL cannot be empty.";
+        }
+        return isValid;
     };
 
     const handleActorsChange = (selectedActors) => {
         // Extract full actor objects of selected actors
-        const selectedActorValues = selectedActors.map(actor => ({
+        const selectedActorValues = selectedActors.map((actor) => ({
             value: actor.value,
-            label: actor.label
+            label: actor.label,
         }));
-        setData('actors', selectedActorValues);
+        setData("actors", selectedActorValues);
     };
-    
+
     return (
-        <AuthenticatedLayout user={auth.user} header={<h2 className="font-semibold text-xl text-white-800 leading-tight break-words">{series.name}</h2>}>
+        <AuthenticatedLayout
+            user={auth.user}
+            header={
+                <h2 className="font-semibold text-xl text-white-800 leading-tight break-words">
+                    {series.name}
+                </h2>
+            }
+        >
             <Head title="Edit Series" />
 
             <div className="py-12">
@@ -40,53 +110,103 @@ export default function SeriesEdit({ series, allCategories, seriesCategories, al
                     <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col sm:flex-row mb-6">
                         <div className="sm:w-1/2">
                             {data.img_url.startsWith("images/posters/") ? (
-                            <img
-                                src={`http://127.0.0.1:8000/${data.img_url}`}
-                                alt="Series Image"
-                                className="w-full h-auto"
-                            />
+                                <img
+                                    src={`http://127.0.0.1:8000/${data.img_url}`}
+                                    alt="Series Image"
+                                    className="w-full h-auto"
+                                />
                             ) : (
-                            <img src={data.img_url} alt="Series Image" className="w-full h-auto" />
+                                <img
+                                    src={data.img_url}
+                                    alt="Series Image"
+                                    className="w-full h-auto"
+                                />
                             )}
                         </div>
                         <div className="sm:w-1/2 p-4 sm:p-8">
-                            <h1 className="text-2xl font-bold mb-2 text-black  break-words">{series.name}</h1>
+                            <h1 className="text-2xl font-bold mb-2 text-black  break-words">
+                                {series.name}
+                            </h1>
                             <form onSubmit={handleSubmit}>
                                 <div className="mb-4">
-                                    <label htmlFor="name" className="block text-gray-700 font-bold mb-2">Name</label>
+                                    <label
+                                        htmlFor="name"
+                                        className="block text-gray-700 font-bold mb-2"
+                                    >
+                                        Name
+                                    </label>
                                     <input
                                         id="name"
                                         type="text"
                                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         value={data.name}
-                                        onChange={(e) => setData('name', e.target.value)}
+                                        onChange={(e) =>
+                                            setData("name", e.target.value)
+                                        }
                                         required
+                                    />
+                                    <InputError
+                                        message={errors.name}
+                                        className="mt-2"
                                     />
                                 </div>
                                 <div className="mb-4">
-                                    <label htmlFor="description" className="block text-gray-700 font-bold mb-2">Description</label>
+                                    <label
+                                        htmlFor="description"
+                                        className="block text-gray-700 font-bold mb-2"
+                                    >
+                                        Description
+                                    </label>
                                     <textarea
                                         id="description"
                                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none overflow-hidden"
                                         value={data.description}
-                                        onChange={(e) => setData('description', e.target.value)}
+                                        onChange={(e) =>
+                                            setData(
+                                                "description",
+                                                e.target.value
+                                            )
+                                        }
                                         required
+                                    />
+                                    <InputError
+                                        message={errors.description}
+                                        className="mt-2"
                                     />
                                 </div>
                                 <div className="mb-4">
-                                    <label htmlFor="quantity_of_series" className="block text-gray-700 font-bold mb-2">Quantity of Series</label>
+                                    <label
+                                        htmlFor="quantity_of_series"
+                                        className="block text-gray-700 font-bold mb-2"
+                                    >
+                                        Quantity of Series
+                                    </label>
                                     <input
                                         id="quantity_of_series"
                                         type="number"
                                         min="1"
                                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         value={data.quantity_of_series}
-                                        onChange={(e) => setData('quantity_of_series', e.target.value)}
+                                        onChange={(e) =>
+                                            setData(
+                                                "quantity_of_series",
+                                                e.target.value
+                                            )
+                                        }
                                         required
+                                    />
+                                    <InputError
+                                        message={errors.quantity_of_series}
+                                        className="mt-2"
                                     />
                                 </div>
                                 <div className="mb-4">
-                                    <label htmlFor="rating" className="block text-gray-700 font-bold mb-2">Rating</label>
+                                    <label
+                                        htmlFor="rating"
+                                        className="block text-gray-700 font-bold mb-2"
+                                    >
+                                        Rating
+                                    </label>
                                     <input
                                         id="rating"
                                         type="number"
@@ -95,76 +215,132 @@ export default function SeriesEdit({ series, allCategories, seriesCategories, al
                                         max="10"
                                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         value={data.rating}
-                                        onChange={(e) => setData('rating', e.target.value)}
+                                        onChange={(e) =>
+                                            setData("rating", e.target.value)
+                                        }
                                         required
+                                    />
+                                    <InputError
+                                        message={errors.rating}
+                                        className="mt-2"
                                     />
                                 </div>
                                 <div className="mb-4">
-                                    <label htmlFor="quantity_of_seasons" className="block text-gray-700 font-bold mb-2">Quantity of Seasons</label>
+                                    <label
+                                        htmlFor="quantity_of_seasons"
+                                        className="block text-gray-700 font-bold mb-2"
+                                    >
+                                        Quantity of Seasons
+                                    </label>
                                     <input
                                         id="quantity_of_seasons"
                                         type="number"
                                         min="1"
                                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         value={data.quantity_of_seasons}
-                                        onChange={(e) => setData('quantity_of_seasons', e.target.value)}
+                                        onChange={(e) =>
+                                            setData(
+                                                "quantity_of_seasons",
+                                                e.target.value
+                                            )
+                                        }
                                         required
                                     />
-                                </div>
-                                <div className="mb-4" style={{ display: 'none' }}>
-                                    <label htmlFor="date_of_creation" className="block text-gray-700 font-bold mb-2">Date of Creation</label>
-                                    <input
-                                        id="date_of_creation"
-                                        type="date"
-                                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        value={data.date_of_creation}
-                                        onChange={(e) => setData('date_of_creation', e.target.value)}
-                                        readOnly
-                                        required
+                                    <InputError
+                                        message={errors.quantity_of_seasons}
+                                        className="mt-2"
                                     />
                                 </div>
                                 <div className="mb-4">
-                                    <label htmlFor="img_url" className="block text-gray-700 font-bold mb-2">Image URL</label>
+                                    <label
+                                        htmlFor="img_url"
+                                        className="block text-gray-700 font-bold mb-2"
+                                    >
+                                        Image URL
+                                    </label>
                                     <input
                                         id="img_url"
                                         type="text"
                                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         value={data.img_url}
-                                        onChange={(e) => setData('img_url', e.target.value)}
+                                        onChange={(e) =>
+                                            setData("img_url", e.target.value)
+                                        }
                                         required
+                                    />
+                                    <InputError
+                                        message={errors.img_url}
+                                        className="mt-2"
                                     />
                                 </div>
 
                                 <div className="mb-4">
-                                    <label htmlFor="categories" className="block text-gray-700 font-bold mb-2">Categories</label>
+                                    <label
+                                        htmlFor="categories"
+                                        className="block text-gray-700 font-bold mb-2"
+                                    >
+                                        Categories
+                                    </label>
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-                                        {allCategories.map(category => (
-                                            <div key={category.id} className="flex items-center">
+                                        {allCategories.map((category) => (
+                                            <div
+                                                key={category.id}
+                                                className="flex items-center"
+                                            >
                                                 <input
                                                     id={`category_${category.id}`}
                                                     type="checkbox"
                                                     className="mr-2 h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                                                     value={category.id}
-                                                    checked={data.categories.includes(category.id)}
+                                                    checked={data.categories.includes(
+                                                        category.id
+                                                    )}
                                                     onChange={(e) => {
-                                                        const categoryId = parseInt(e.target.value);
-                                                        const updatedCategories = e.target.checked
-                                                            ? [...data.categories, categoryId]
-                                                            : data.categories.filter(id => id !== categoryId);
-                                                        setData('categories', updatedCategories);
+                                                        const categoryId =
+                                                            parseInt(
+                                                                e.target.value
+                                                            );
+                                                        const updatedCategories =
+                                                            e.target.checked
+                                                                ? [
+                                                                      ...data.categories,
+                                                                      categoryId,
+                                                                  ]
+                                                                : data.categories.filter(
+                                                                      (id) =>
+                                                                          id !==
+                                                                          categoryId
+                                                                  );
+                                                        setData(
+                                                            "categories",
+                                                            updatedCategories
+                                                        );
                                                     }}
                                                 />
-                                                <label htmlFor={`category_${category.id}`} className="select-none">{category.name}</label>
+                                                <label
+                                                    htmlFor={`category_${category.id}`}
+                                                    className="select-none"
+                                                >
+                                                    {category.name}
+                                                </label>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
 
                                 <div className="mb-4">
-                                    <label htmlFor="actors" className="block text-gray-700 font-bold mb-2">Actors</label>
+                                    <label
+                                        htmlFor="actors"
+                                        className="block text-gray-700 font-bold mb-2"
+                                    >
+                                        Actors
+                                    </label>
                                     <Select
                                         id="actors"
-                                        options={allActors.map(actor => ({ value: actor.id, label: actor.name }))}
+                                        options={allActors.map((actor) => ({
+                                            value: actor.id,
+                                            label: actor.name,
+                                        }))}
                                         isMulti
                                         value={(() => {
                                             console.log(data.actors);
@@ -186,8 +362,8 @@ export default function SeriesEdit({ series, allCategories, seriesCategories, al
                                     type="button"
                                     className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2"
                                     onClick={() => window.history.back()}
-                                    >
-                                        Cancel
+                                >
+                                    Cancel
                                 </button>
                             </form>
                         </div>

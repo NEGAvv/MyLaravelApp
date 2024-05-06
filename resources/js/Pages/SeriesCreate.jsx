@@ -1,83 +1,254 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
-import { useState } from 'react';
-import { Inertia } from '@inertiajs/inertia';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head } from "@inertiajs/react";
+import { useState } from "react";
+import { Inertia } from "@inertiajs/inertia";
+import InputError from '@/Components/InputError';
 
 export default function SeriesCreate({ auth }) {
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    quantity_of_series: '',
-    rating: '',
-    quantity_of_seasons: '',
-    date_of_creation: new Date().toISOString().slice(0, 10),
-    img_url: ''
-  });
+    const [formData, setFormData] = useState({
+        name: "",
+        description: "",
+        quantity_of_series: "",
+        rating: "",
+        quantity_of_seasons: "",
+        date_of_creation: new Date().toISOString().slice(0, 10),
+        img_url: "",
+    });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
+    // State for error handling
+    const [nameError, setNameError] = useState("");
+    const [descriptionError, setDescriptionError] = useState("");
+    const [quantityError, setQuantityError] = useState("");
+    const [ratingError, setRatingError] = useState("");
+    const [seasonsError, setSeasonsError] = useState("");
+    const [imageUrlError, setImageUrlError] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Send form data to the server
-    Inertia.post(route('series.store'), formData);
-  };
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
 
-  return (
-    <AuthenticatedLayout
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Reset previous errors
+        setNameError("");
+        setDescriptionError("");
+        setQuantityError("");
+        setRatingError("");
+        setSeasonsError("");
+        setImageUrlError("");
+
+        // Validate form fields
+        let isValid = true;
+        if (!formData.name.trim()) {
+            setNameError("Name cannot be empty.");
+            isValid = false;
+        }
+        if (!formData.description.trim()) {
+            setDescriptionError("Description cannot be empty.");
+            isValid = false;
+        }
+        if (
+            !formData.quantity_of_series.trim() ||
+            isNaN(formData.quantity_of_series) ||
+            formData.quantity_of_series <= 0
+        ) {
+            setQuantityError("Quantity of series must be a positive number.");
+            isValid = false;
+        }
+        if (
+            !formData.rating.trim() ||
+            isNaN(formData.rating) ||
+            formData.rating <= 0
+        ) {
+            setRatingError("Rating must be a positive number.");
+            isValid = false;
+        }
+        if (
+            !formData.quantity_of_seasons.trim() ||
+            isNaN(formData.quantity_of_seasons) ||
+            formData.quantity_of_seasons <= 0
+        ) {
+            setSeasonsError("Quantity of seasons must be a positive number.");
+            isValid = false;
+        }
+        if (!formData.img_url.trim()) {
+            setImageUrlError("Image URL cannot be empty.");
+            isValid = false;
+        }
+
+        if (isValid) {
+            // Send form data to the server
+            Inertia.post(route("series.store"), formData);
+        }
+    };
+
+    return (
+        <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-white-800 leading-tight">Create Series</h2>}
+            header={
+                <h2 className="font-semibold text-xl text-white-800 leading-tight">
+                    Create Series
+                </h2>
+            }
         >
-          <Head title="Create Series" />
-          <div className="py-4">
-            <div className="max-w-3xl mx-auto sm:px-6 lg:px-8">
-              <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-                  <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+            <Head title="Create Series" />
+            <div className="py-4">
+                <div className="max-w-3xl mx-auto sm:px-6 lg:px-8">
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                            <label
+                                htmlFor="name"
+                                className="block text-sm font-medium text-gray-700"
+                            >
+                                Name
+                            </label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            />
+                            <InputError message={nameError} className="mt-2" />
+                        </div>
+                        <div className="mb-4">
+                            <label
+                                htmlFor="description"
+                                className="block text-sm font-medium text-gray-700"
+                            >
+                                Description
+                            </label>
+                            <textarea
+                                id="description"
+                                name="description"
+                                value={formData.description}
+                                onChange={handleChange}
+                                rows="3"
+                                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            ></textarea>
+                            <InputError
+                                message={descriptionError}
+                                className="mt-2"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label
+                                htmlFor="quantity_of_series"
+                                className="block text-sm font-medium text-gray-700"
+                            >
+                                Quantity of Series
+                            </label>
+                            <input
+                                type="number"
+                                id="quantity_of_series"
+                                name="quantity_of_series"
+                                value={formData.quantity_of_series}
+                                onChange={handleChange}
+                                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            />
+                            <InputError
+                                message={quantityError}
+                                className="mt-2"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label
+                                htmlFor="rating"
+                                className="block text-sm font-medium text-gray-700"
+                            >
+                                Rating
+                            </label>
+                            <input
+                                type="number"
+                                id="rating"
+                                name="rating"
+                                value={formData.rating}
+                                onChange={handleChange}
+                                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            />
+                            <InputError
+                                message={ratingError}
+                                className="mt-2"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label
+                                htmlFor="quantity_of_seasons"
+                                className="block text-sm font-medium text-gray-700"
+                            >
+                                Quantity of Seasons
+                            </label>
+                            <input
+                                type="number"
+                                id="quantity_of_seasons"
+                                name="quantity_of_seasons"
+                                value={formData.quantity_of_seasons}
+                                onChange={handleChange}
+                                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            />
+                            <InputError
+                                message={seasonsError}
+                                className="mt-2"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label
+                                htmlFor="date_of_creation"
+                                className="block text-sm font-medium text-gray-700"
+                            >
+                                Date of Creation
+                            </label>
+                            <input
+                                type="date"
+                                id="date_of_creation"
+                                name="date_of_creation"
+                                value={formData.date_of_creation}
+                                onChange={handleChange}
+                                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                readOnly
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label
+                                htmlFor="img_url"
+                                className="block text-sm font-medium text-gray-700"
+                            >
+                                Image URL
+                            </label>
+                            <input
+                                type="url"
+                                id="img_url"
+                                name="img_url"
+                                value={formData.img_url}
+                                onChange={handleChange}
+                                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            />
+                            <InputError
+                                message={imageUrlError}
+                                className="mt-2"
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+                        >
+                            Create Series
+                        </button>
+                        <button
+                            type="button"
+                            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2"
+                            onClick={() => window.history.back()}
+                        >
+                            Cancel
+                        </button>
+                    </form>
                 </div>
-                <div className="mb-4">
-                  <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-                  <textarea id="description" name="description" value={formData.description} onChange={handleChange} rows="3" className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"></textarea>
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="quantity_of_series" className="block text-sm font-medium text-gray-700">Quantity of Series</label>
-                  <input type="number" id="quantity_of_series" name="quantity_of_series" value={formData.quantity_of_series} onChange={handleChange} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="rating" className="block text-sm font-medium text-gray-700">Rating</label>
-                  <input type="number" id="rating" name="rating" value={formData.rating} onChange={handleChange} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="quantity_of_seasons" className="block text-sm font-medium text-gray-700">Quantity of Seasons</label>
-                  <input type="number" id="quantity_of_seasons" name="quantity_of_seasons" value={formData.quantity_of_seasons} onChange={handleChange} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                </div>
-                <div className="mb-4">
-                <label htmlFor="date_of_creation" className="block text-sm font-medium text-gray-700">Date of Creation</label>
-                  <input type="date" id="date_of_creation" name="date_of_creation" value={formData.date_of_creation} onChange={handleChange} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" readOnly />
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="img_url" className="block text-sm font-medium text-gray-700">Image URL</label>
-                  <input type="url" id="img_url" name="img_url" value={formData.img_url} onChange={handleChange} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                </div>
-                <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md">Create Series</button>
-                <button
-                  type="button"
-                  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2"
-                  onClick={() => window.history.back()}
-                  >
-                      Cancel
-                </button>
-              </form>
             </div>
-        </div>
-    </AuthenticatedLayout>
-  );
-  
-};
-
+        </AuthenticatedLayout>
+    );
+}
